@@ -10,7 +10,7 @@ sim:
 	iverilog -g2012 -o sim.out top_tb.sv
 	vvp sim.out
 
-prog:
+prog: build
 	dfu-util --device 1d50:6146 --alt 0 -D $(filename).bin
 
 clean:

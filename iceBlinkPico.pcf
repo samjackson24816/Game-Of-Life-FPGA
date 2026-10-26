@@ -1,0 +1,12 @@
+# I/O Pin Definitions for the iceBlinkPico (iCE40UP5K-SG48ITR) board
+
+# Tactile switches (active low)
+set_io -nowarn BOOT     9
+set_io -nowarn SW       38
+
+# 12-MHz CMOS oscillator
+set_io -nowarn clk      20
+
+# WS2812B LED matrix outputs
+set_io -nowarn _48b     36
+set_io -nowarn _45a     37

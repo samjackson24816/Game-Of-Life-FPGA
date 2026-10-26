@@ -2,3 +2,5 @@ sim.out
 top.asc
 top.bin
 top.vcd
+test.out
+top.json

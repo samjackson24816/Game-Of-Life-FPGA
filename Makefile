@@ -11,7 +11,7 @@ sim:
 	vvp sim.out
 
 prog:
-	dfu-util --device 1d50:6146 --alt 0 -D $(filename).bin -R
+	dfu-util --device 1d50:6146 --alt 0 -D $(filename).bin
 
 clean:
-	rm -rf $(filename).blif $(filename).asc $(filename).json $(filename).bin sim.out *.vcd
+	rm -rf $(filename).blif $(filename).asc $(filename).json $(filename).bin sim.out test.out *.vcd

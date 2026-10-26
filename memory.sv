@@ -9,11 +9,10 @@ module memory #(
     logic [7:0] mem [0:7];
 
     initial if (INIT_FILE) begin
-        $readmemh(INIT_FILE, mem);
+        $readmemb(INIT_FILE, mem);
     end
 
-    always_ff @(posedge clk) begin
-        read_data <= mem[read_address];
-    end
+    // Combinational read for 8-byte distributed memory ensures 0-cycle latency
+    assign read_data = mem[read_address];
 
 endmodule

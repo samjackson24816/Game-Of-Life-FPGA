@@ -1,8 +1,12 @@
-module ws2812b(
-    input logic clk, 
-    input logic serial_in, 
-    input logic transmit, 
-    output logic ws2812b_out, 
+// WS2812B bit sender from the iceBlinkPico led_matrix example.
+// Each bit takes 15 cycles. The line stays high for 5 cycles to send a 0 and
+// for 10 cycles to send a 1. Shift pulses at the start of each bit so the next one is ready.
+
+module ws2812b (
+    input logic clk,
+    input logic serial_in,
+    input logic transmit,
+    output logic ws2812b_out,
     output logic shift
 );
 
@@ -14,41 +18,34 @@ module ws2812b(
     localparam MAX_CYCLE_COUNT = 4'd15;
 
     logic state = IDLE;
-    logic [3:0] cycle_count = 4'd0;
-    logic bit_being_sent = 1'b0;
+    logic [3:0] cycle_count = 0;
+    logic bit_being_sent = 0;
 
     always_ff @(posedge clk) begin
         unique case (state)
             IDLE:
-                if (transmit == 1'b1) begin
+                if (transmit) begin
                     state <= TRANSMITTING;
-                    cycle_count <= 4'd0;
+                    cycle_count <= 0;
                     bit_being_sent <= serial_in;
                 end
             TRANSMITTING:
-                if (transmit == 1'b0) begin
+                if (!transmit) begin
                     state <= IDLE;
-                end
-                else if (cycle_count == MAX_CYCLE_COUNT - 1) begin
-                    cycle_count <= 4'd0;
+
+                end else if (cycle_count == MAX_CYCLE_COUNT - 1) begin
+                    cycle_count <= 0;
                     bit_being_sent <= serial_in;
-                end
-                else begin
+
+                end else begin
                     cycle_count <= cycle_count + 1;
                 end
         endcase
     end
 
-    always_comb begin
-        if (state == TRANSMITTING)
-            if (bit_being_sent == 1'b0)
-                ws2812b_out = (cycle_count < T0_CYCLE_COUNT);
-            else
-                ws2812b_out = (cycle_count < T1_CYCLE_COUNT);
-        else
-            ws2812b_out = 1'b0;
-    end
+    assign ws2812b_out = (state == TRANSMITTING) &&
+                         (cycle_count < (bit_being_sent ? T1_CYCLE_COUNT : T0_CYCLE_COUNT));
 
-    assign shift = (state == TRANSMITTING) && (cycle_count == 4'd0);
+    assign shift = (state == TRANSMITTING) && (cycle_count == 0);
 
 endmodule

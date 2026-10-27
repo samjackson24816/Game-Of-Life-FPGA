@@ -4,3 +4,5 @@ top.bin
 top.vcd
 test.out
 top.json
+.venv/
+__pycache__/

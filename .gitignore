@@ -6,3 +6,5 @@ test.out
 top.json
 .venv/
 __pycache__/
+game_of_life_tb.vcd
+game_of_life_tb.gtkw
